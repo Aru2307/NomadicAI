@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>NomadicAI — Платформа для Туристов</title>
+
+<!-- Шрифты и библиотеки -->
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+<style>
+* { box-sizing: border-box; }
+body {
+margin: 0;
+font-family: 'Montserrat', sans-serif;
+background-color: #f4f7f8;
+color: #333;
+}
+header {
+background-color: #00695c;
+color: white;
+padding: 20px 40px;
+position: sticky;
+top: 0;
+z-index: 1000;
+}
+nav a {
+color: #e0f2f1;
+margin-right: 20px;
+text-decoration: none;
+}
+nav a:hover {
+text-decoration: underline;
+}
+.hero {
+background: linear-gradient(to right, #00796b, #004d40);
+padding: 80px 20px;
+text-align: center;
+color: white;
+}
+.hero h2 {
+font-size: 36px;
+}
+.btn {
+padding: 12px 24px;
+background-color: #ffb300;
+color: white;
+border: none;
+border-radius: 30px;
+font-size: 16px;
+cursor: pointer;
+margin-top: 20px;
+}
+.btn:hover {
+background-color: #ffa000;
+}
+main {
+max-width: 1100px;
+margin: auto;
+padding: 40px 20px;
+}
+section {
+margin-bottom: 60px;
+}
+h2 {
+color: #00695c;
+text-align: center;
+}
+.cards {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+gap: 20px;
+}
+.card {
+background: white;
+padding: 20px;
+border-radius: 16px;
+box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+transition: transform 0.3s;
+}
+.card:hover {
+transform: translateY(-5px);
+}
+form input, form select, form textarea {
+font-family: inherit;
+}
+footer {
+text-align: center;
+padding: 30px;
+background: #004d40;
+color: white;
+}
+
+/* Чат-ассистент */
+#chat-icon {
+position: fixed;
+bottom: 20px;
+right: 20px;
+background-color: #ffab40;
+color: white;
+border-radius: 50%;
+width: 60px;
+height: 60px;
+text-align: center;
+line-height: 60px;
+font-size: 24px;
+cursor: pointer;
+box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+z-index: 999;
+}
+#chat-box {
+display: none;
+position: fixed;
+bottom: 90px;
+right: 20px;
+width: 300px;
+background: white;
+border: 1px solid #ccc;
+border-radius: 16px;
+box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+z-index: 999;
+}
+#chat-box header {
+background-color: #00695c;
+color: white;
+padding: 10px;
+border-radius: 16px 16px 0 0;
+}
+#chat-box .content {
+padding: 10px;
+font-size: 14px;
+}
+</style>
+</head>
+<body>
+
+<header>
+<h1>NomadicAI</h1>
+<nav>
+<a href="#about">О платформе</a>
+<a href="#features">Особенности</a>
+<a href="#routes">Маршруты</a>
+<a href="#signup">Регистрация</a>
+<a href="#map">Карта</a>
+</nav>
+</header>
+
+<section class="hero">
+<h2>Откройте Центральную Азию вместе с ИИ</h2>
+<p>Индивидуальные маршруты, перевод, бронирование и ассистент — всё в одном</p>
+<button class="btn">Начать путешествие</button>
+</section>
+
+<main>
+<section id="about" data-aos="fade-up">
+<h2>О платформе</h2>
+<p><strong>NomadicAI</strong> — инновационная платформа, использующая искусственный интеллект для персонализации путешествий по Центральной Азии.</p>
+</section>
+
+<section id="features" data-aos="fade-up">
+<h2>Особенности</h2>
+<ul>
+<li>Рекомендации маршрутов по интересам, бюджету и предпочтениям</li>
+<li>Оптимизация времени с помощью умного планировщика</li>
+<li>24/7 чат и голосовой ИИ-ассистент</li>
+<li>Анализ отзывов, фильтрация фейков</li>
+<li>Награды за медиа-отзывы</li>
+<li>Автоперевод и культурные подсказки</li>
+<li>ИИ для бронирования и логистики</li>
+</ul>
+</section>
+
+<section id="routes" data-aos="fade-up">
+<h2>Популярные маршруты</h2>
+<div class="cards">
+<div class="card">
+<h3>Алматы и горы</h3>
+<p>Погрузитесь в природу, каньоны и чайные дома Южного Казахстана</p>
+<button class="btn">Подробнее</button>
+</div>
+<div class="card">
+<h3>Шелковый путь</h3>
+<p>Исторический маршрут через Самарканд, Бухару и Хиву</p>
+<button class="btn">Подробнее</button>
+</div>
+<div class="card">
+<h3>Иссык-Куль и юрты</h3>
+<p>Откройте природу Кыргызстана, озёра, горы и кочевую культуру</p>
+<button class="btn">Подробнее</button>
+</div>
+</div>
+</section>
+
+<section id="signup" data-aos="fade-up">
+<h2>Присоединиться к платформе</h2>
+<form style="max-width: 500px; margin: auto;" onsubmit="event.preventDefault(); alert('Спасибо за регистрацию!');">
+<input type="text" placeholder="Ваше имя" required style="width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #ccc;">
+<input type="email" placeholder="Email" required style="width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #ccc;">
+<button class="btn" type="submit" style="width: 100%;">Зарегистрироваться</button>
+</form>
+</section>
+
+<section id="review" data-aos="fade-up">
+<h2>Оставить отзыв</h2>
+<form style="max-width: 600px; margin: auto;" onsubmit="event.preventDefault(); alert('Спасибо за ваш отзыв!');">
+<label>Оценка:</label><br/>
+<select required style="width: 100%; padding: 10px; margin: 10px 0; border-radius: 8px; border: 1px solid #ccc;">
+<option value="">Выберите оценку</option>
+<option>5 — Отлично</option>
+<option>4 — Хорошо</option>
+<option>3 — Нормально</option>
+<option>2 — Не очень</option>
+<option>1 — Плохо</option>
+</select>
+<textarea placeholder="Ваш комментарий" rows="4" required style="width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #ccc;"></textarea>
+<button class="btn" type="submit" style="width: 100%;">Отправить отзыв</button>
+</form>
+</section>
+
+<section id="map" data-aos="fade-up">
+<h2>Карта маршрутов</h2>
+<div id="mapid" style="height: 400px; width: 100%; border-radius: 16px; overflow: hidden; margin-top: 20px;"></div>
+</section>
+</main>
+
+<footer>
+© 2025 NomadicAI. Все права защищены.
+</footer>
+
+<!-- Чат ассистент -->
+<div id="chat-icon"><i class="fas fa-comments"></i></div>
+<div id="chat-box">
+<header>Чат-ассистент</header>
+<div class="content">
+<p>Привет! Я — ИИ-помощник. Чем могу помочь?</p>
+</div>
+</div>
+
+<!-- Скрипты -->
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+AOS.init();
+
+const chatIcon = document.getElementById('chat-icon');
+const chatBox = document.getElementById('chat-box');
+chatIcon.addEventListener('click', () => {
+chatBox.style.display = chatBox.style.display === 'block' ? 'none' : 'block';
+});
+
+const map = L.map('mapid').setView([42.87, 74.6], 5);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+attribution: '&copy; OpenStreetMap contributors'
+}).addTo(map);
+
+const places = [
+{ name: "Алматы", coords: [43.2389, 76.8897] },
+{ name: "Бишкек", coords: [42.8746, 74.5698] },
+{ name: "Самарканд", coords: [39.6542, 66.9597] }
+];
+places.forEach(p => {
+L.marker(p.coords).addTo(map).bindPopup(`<b>${p.name}</b>`);
+});
+</script>
+
+</body>
+</html>
