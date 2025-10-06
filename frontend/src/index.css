@@ -1,0 +1,16 @@
+:root{--bg:#0b1220;--panel:#111827;--muted:#9ca3af;--accent:#4f46e5;--border:#1f2937}
+*{box-sizing:border-box}html,body,#root{height:100%}
+body{margin:0;font-family:system-ui,Segoe UI,Roboto,Helvetica,Arial,Apple Color Emoji,Segoe UI Emoji;background:var(--bg);color:white}
+button{cursor:pointer}
+input,button,textarea{font-size:16px}
+.container{max-width:960px;margin:0 auto;padding:24px}
+.header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.badge{background:var(--accent);padding:6px 10px;border-radius:8px}
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:16px}
+.row{display:flex;gap:12px}
+.row>*{flex:1}
+.chat{display:flex;flex-direction:column;gap:12px}
+.msg{padding:12px;border-radius:8px;white-space:pre-wrap}
+.msg.user{background:#0f172a}
+.msg.assistant{background:#111827;border:1px solid var(--border)}
+.source{color:var(--muted);font-size:14px}

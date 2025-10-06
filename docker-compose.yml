@@ -1,0 +1,39 @@
+services:
+  ollama:
+    image: ollama/ollama:0.3.12
+    restart: unless-stopped
+    environment:
+      - OLLAMA_MODEL=llama3.1
+    ports:
+      - '11434:11434'
+    volumes:
+      - ollama:/root/.ollama
+    entrypoint: ["/bin/sh", "-lc"]
+    command: >
+      "ollama serve &
+      until ollama list >/dev/null 2>&1; do sleep 1; done;
+      ollama pull ${OLLAMA_MODEL:-llama3.1};
+      wait"
+
+  backend:
+    build: ./backend
+    environment:
+      - OPENAI_API_KEY
+      - OLLAMA_MODEL=llama3.1
+      - OLLAMA_BASE_URL=http://ollama:11434
+    depends_on:
+      - ollama
+    ports:
+      - '8000:8000'
+    volumes:
+      - ./backend/data:/app/data
+
+  frontend:
+    build: ./frontend
+    depends_on:
+      - backend
+    ports:
+      - '5173:5173'
+
+volumes:
+  ollama:
