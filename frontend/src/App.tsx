@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 import { useChatStore } from './store'
 
@@ -9,7 +9,15 @@ export default function App() {
   const { messages, addMessage, loading, setLoading, clear } = useChatStore()
   const [question, setQuestion] = useState('')
   const [ingestInfo, setIngestInfo] = useState<string>('')
-  const [provider, setProvider] = useState<'auto' | 'openai' | 'ollama'>('auto')
+  const [provider, setProvider] = useState<'auto' | 'openai' | 'ollama'>(() => {
+    const saved = localStorage.getItem('provider')
+    if (saved === 'openai' || saved === 'ollama' || saved === 'auto') return saved
+    return 'auto'
+  })
+
+  useEffect(() => {
+    localStorage.setItem('provider', provider)
+  }, [provider])
 
   async function uploadFiles(files: FileList) {
     const form = new FormData()
@@ -64,7 +72,7 @@ export default function App() {
     <div className="container">
       <div className="header">
         <h2>AI Copilot for Engineers</h2>
-        <div className="badge">Local RAG</div>
+        <div className="badge">{provider === 'auto' ? 'Auto' : provider === 'openai' ? 'OpenAI' : 'Ollama'}</div>
       </div>
 
       <div className="panel" style={{ marginBottom: 16 }}>

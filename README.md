@@ -28,6 +28,7 @@ Local-first RAG assistant that ingests technical documents (PDF/DOCX/TXT) and an
 4. Upload documents and ask questions
    - Use the Upload button to ingest PDFs, DOCX, or TXT
    - Select provider (Auto/OpenAI/Ollama) in the dropdown
+  - The selected provider is saved in your browser (localStorage)
    - Ask questions like:
      - "What pipe diameter is needed for this pressure?"
      - "Which material is suitable according to GOST 3262-75?"
