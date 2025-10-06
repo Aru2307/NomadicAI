@@ -90,5 +90,6 @@ async def ask_question(payload: AskRequest) -> AskResponse:
     if not payload.question or not payload.question.strip():
         raise HTTPException(status_code=400, detail="Question is empty")
 
-    answer, sources, calc = rag.answer(payload.question)
+    provider = None if payload.provider in (None, "", "auto") else payload.provider
+    answer, sources, calc = rag.answer(payload.question, provider=provider)
     return AskResponse(answer=answer, sources=sources, calc=calc)

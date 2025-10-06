@@ -111,14 +111,24 @@ class RAGPipeline:
             unique_citations.append(c)
         return context, unique_citations
 
-    def answer(self, question: str) -> Tuple[str, List[SourceCitation], Optional[str]]:
+    def answer(self, question: str, provider: Optional[str] = None) -> Tuple[str, List[SourceCitation], Optional[str]]:
         # Retrieval
         docs = self.retriever.get_relevant_documents(question)
         context, citations = self._format_docs_for_context(docs)
 
         # LLM answer
         messages = self.prompt.format_messages(question=question, context=context)
-        llm_out = self.llm.invoke(messages)
+        # Allow per-request provider override
+        llm_to_use = self.llm
+        if provider is not None and provider.lower() in {"openai", "ollama"}:
+            if provider.lower() == "openai" and os.getenv("OPENAI_API_KEY"):
+                llm_to_use = ChatOpenAI(model="gpt-4o-mini", temperature=0.0)
+            elif provider.lower() == "ollama":
+                model_name = os.getenv("OLLAMA_MODEL", "llama3.1")
+                base_url = os.getenv("OLLAMA_BASE_URL", "http://ollama:11434")
+                llm_to_use = ChatOllama(model=model_name, temperature=0.0, base_url=base_url)
+
+        llm_out = llm_to_use.invoke(messages)
         answer_text = getattr(llm_out, "content", str(llm_out))
 
         # Optional calculation engine

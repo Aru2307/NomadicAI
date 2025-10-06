@@ -9,6 +9,7 @@ export default function App() {
   const { messages, addMessage, loading, setLoading, clear } = useChatStore()
   const [question, setQuestion] = useState('')
   const [ingestInfo, setIngestInfo] = useState<string>('')
+  const [provider, setProvider] = useState<'auto' | 'openai' | 'ollama'>('auto')
 
   async function uploadFiles(files: FileList) {
     const form = new FormData()
@@ -37,7 +38,7 @@ export default function App() {
       const res = await fetch(`${apiBase}/ask`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ question: q }),
+        body: JSON.stringify({ question: q, provider }),
       })
       if (!res.ok) throw new Error(await res.text())
       const data = await res.json()
@@ -76,6 +77,11 @@ export default function App() {
           />
           <button onClick={() => fileInputRef.current?.click()}>Upload</button>
           <button onClick={clear}>Clear Chat</button>
+          <select value={provider} onChange={(e) => setProvider(e.target.value as any)}>
+            <option value="auto">Auto</option>
+            <option value="openai">OpenAI</option>
+            <option value="ollama">Ollama</option>
+          </select>
         </div>
         <div style={{ marginTop: 8, color: '#9ca3af' }}>{ingestInfo}</div>
       </div>

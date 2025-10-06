@@ -10,6 +10,7 @@ class HealthResponse(BaseModel):
 
 class AskRequest(BaseModel):
     question: str
+    provider: str | None = None  # 'auto' | 'openai' | 'ollama'
 
 
 class SourceCitation(BaseModel):
