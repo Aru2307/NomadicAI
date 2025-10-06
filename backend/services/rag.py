@@ -35,13 +35,17 @@ def get_default_embeddings():
 
 
 def get_default_llm():
-    """Choose LLM: OpenAI if key present else Ollama (llama3.1)."""
+    """Choose LLM: OpenAI if key present else Ollama (llama3.1).
+
+    For Ollama, allow configuring the base URL via OLLAMA_BASE_URL (default http://ollama:11434).
+    """
     if os.getenv("OPENAI_API_KEY"):
         # Fast, inexpensive default model
         return ChatOpenAI(model="gpt-4o-mini", temperature=0.0)
     # Local model via Ollama server (ensure `ollama serve` is running)
     model_name = os.getenv("OLLAMA_MODEL", "llama3.1")
-    return ChatOllama(model=model_name, temperature=0.0)
+    base_url = os.getenv("OLLAMA_BASE_URL", "http://ollama:11434")
+    return ChatOllama(model=model_name, temperature=0.0, base_url=base_url)
 
 
 class RAGPipeline:

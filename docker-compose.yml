@@ -1,1 +1,31 @@
-services:\n  backend:\n    build: ./backend\n    ports:\n      - '8000:8000'\n    environment:\n      - OPENAI_API_KEY\n      - OLLAMA_MODEL=llama3.1\n    volumes:\n      - ./backend/data:/app/data\n  frontend:\n    build: ./frontend\n    ports:\n      - '5173:5173'\n    depends_on:\n      - backend\n
+services:
+  ollama:
+    image: ollama/ollama:0.3.12
+    restart: unless-stopped
+    ports:
+      - '11434:11434'
+    volumes:
+      - ollama:/root/.ollama
+
+  backend:
+    build: ./backend
+    environment:
+      - OPENAI_API_KEY
+      - OLLAMA_MODEL=llama3.1
+      - OLLAMA_BASE_URL=http://ollama:11434
+    depends_on:
+      - ollama
+    ports:
+      - '8000:8000'
+    volumes:
+      - ./backend/data:/app/data
+
+  frontend:
+    build: ./frontend
+    depends_on:
+      - backend
+    ports:
+      - '5173:5173'
+
+volumes:
+  ollama:
